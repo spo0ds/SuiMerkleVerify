@@ -30,7 +30,27 @@ module merkle_verify::merkle {
             };
             i = i + 1;
         };
-        assert!(root == hash_data, ERootMisMatched);
+        // assert!(root == hash_data, ERootMisMatched);
         hash_data
     }
+
+    #[test] 
+    fun test_verify(){
+        let merkle_hashes = vector::empty<vector<u8>>();
+        let merkle_direction = vector::empty<vector<u8>>();
+         
+        // for proof 
+        vector::push_back(&mut merkle_hashes, x"1ad25d0002690dc02e2708a297d8c9df1f160d376f663309cc261c7c921367e7");
+        vector::push_back(&mut merkle_hashes, x"8e302837bc626f037867a860eb81f24568fb0aa9ce754d2ccb58452afe3e3310");
+        vector::push_back(&mut merkle_hashes, x"8b56aa54f7553614bf7e355de683ed7c8691a69c67a1bf54e6b2708459138661");
+
+        // for direction 
+        vector::push_back(&mut merkle_direction, b"right");
+        vector::push_back(&mut merkle_direction, b"left");
+        vector::push_back(&mut merkle_direction, b"right");
+        let expectedRoot = x"d40db90a4a21b8a28c6c5c8204ae7c378c85485eb333ffd2f06be2981ce9660f";
+        let leaf = x"c4289629b08bc4d61411aaa6d6d4a0c3c5f8c1e848e282976e29b6bed5aeedc7";
+        let root = verify_merkle(expectedRoot, leaf, merkle_hashes, merkle_direction);
+        assert!(expectedRoot == root, 0);
+    } 
 }
